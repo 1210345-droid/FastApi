@@ -1,0 +1,79 @@
+<!-- src/templates/agenda.html -->
+{% extends "base.html" %}
+{% block title %}Contactos - Panel Jinja2{% endblock %}
+{% block content %}
+<div class="row g-4">
+    <!-- Reto Práctico 3: Formulario HTML para agregar nuevos contactos -->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Nuevo Contacto</h5>
+            </div>
+            <div class="card-body">
+                {% if error %}
+                <div class="alert alert-danger py-2">{{ error }}</div>
+                {% endif %}
+                <form action="/views/agenda" method="post">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre Completo</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" minlength="2" maxlength="50" required placeholder="Ej. Ana García">
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Teléfono (7-15 dígitos)</label>
+                        <input type="text" class="form-control" id="telefono" name="telefono" pattern="^\d{7,15}$" required placeholder="Ej. 5512345678">
+                    </div>
+                    <div class="mb-3">
+                        <label for="mail" class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="mail" name="mail" required placeholder="ana@ejemplo.com">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Guardar Contacto</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de contactos renderizada con Jinja2 -->
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Lista de Contactos (Renderizada con Jinja2)</h4>
+                <span class="badge bg-info text-dark">{{ contactos|length }} Registros</span>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>Correo</th>
+                            <th>Usuario ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in contactos %}
+                        <tr>
+                            <td><strong>#{{ c.id }}</strong></td>
+                            <td>{{ c.nombre }}</td>
+                            <td>{{ c.telefono }}</td>
+                            <td><a href="mailto:{{ c.mail }}">{{ c.mail }}</a></td>
+                            <td>
+                                {% if c.user_id %}
+                                <span class="badge bg-secondary">User #{{ c.user_id }}</span>
+                                {% else %}
+                                <span class="badge bg-light text-muted border">Web SSR</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">No hay contactos registrados</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
